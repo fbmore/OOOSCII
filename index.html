@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+
+//  ***    ****    *****     *     *****   *****   ****         ****    *   *   
+// *   *   *   *   *        * *      *     *       *   *        *   *    * *    
+// *       ****    ****    *****     *     ****    *   *        ****      *     
+// *   *   *  *    *       *   *     *     *       *   *        *   *     *     
+//  ***    *   *   *****   *   *     *     *****   ****         ****      *     
+
+// *****   ****      *     *   *    ***    *****    ***     ***     ***         ****    *****   ****    *****    ***     ***     ***     ***    
+// *       *   *    * *    **  *   *   *   *       *       *   *   *   *        *   *   *       *   *     *     *   *   *   *   *   *     *     
+// ****    ****    *****   * * *   *       ****     ***    *       *   *        ****    ****    ****      *     *   *   *       *         *     
+// *       *  *    *   *   *  **   *   *   *           *   *   *   *   *        *   *   *       *  *      *     *   *   *   *   *   *     *     
+// *       *   *   *   *   *   *    ***    *****    ***     ***     ***         ****    *****   *   *     *      ***     ***     ***     ***    
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOOSCII 🤌</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            margin-top: 8px;
+
+        }
+
+        input[type="text"]:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        .input-row {
+            display: flex;
+        }
+
+        label {
+            /* opacity: .7;   */
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 800;
+        }
+
+
+        .microcopy {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            opacity: .7;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            white-space: pre;
+            font-family: 'Courier New', monospace;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-width: 80px;
+            /* max-width: 800px; */
+            min-height: 80px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #logo {
+            zoom: 0.4;
+            width: 100%;
+            /* Default width */
+        }
+
+        @media (max-width: 400px) {
+            #logo {
+                zoom: 0.2;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <h1>OOOSCII 🤌</h1> -->
+
+    <h1>
+        <pre id="logo">
+ OOO     OOO     OOO     OOO     OOO     OOO     OOO    
+O   O   O   O   O   O   O       O   O     O       O     
+O   O   O   O   O   O    OOO    O         O       O     
+O   O   O   O   O   O       O   O   O     O       O     
+ OOO     OOO     OOO     OOO     OOO     OOO     OOO 🤌</pre>
+
+    </h1>
+
+
+    <div class="input-row">
+        <div class="input-group">
+            <label for="inputString">Enter text to OOOSCIIfy:</label>
+            <div class="input-group">
+                <input oninput="enlargeString()" type="text" id="inputString" placeholder="Type something..." />
+                <div class="microcopy">Supported characters: A-Z, 0-9, . , ! ?</div>
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="replacementChar">Use:</label>
+            <div class="input-group">
+                <input oninput="enlargeString()" type="text" id="replacementChar" placeholder="" maxlength="5" value="*"
+                    style="width: 20px;" />
+
+            </div>
+        </div>
+    </div>
+    <!-- <label for="inputString">Enter a string to OOOSCIIfy:</label>
+        <input oninput="enlargeString()" type="text" id="inputString" placeholder="Type something..." />
+        <div class="microcopy">Supported characters: A-Z, . , ! ?</div>
+
+        <label for="replacementChar">Use:</label>
+        <input oninput="enlargeString()" type="text" id="replacementChar" placeholder="" maxlength="1" width="40px" value="O"/> -->
+    <!-- <div class="microcopy"></div> -->
+
+
+
+    <!-- <button onclick="enlargeString()">Let's go!</button> -->
+    <div class="output" id="output"></div>
+
+    <div class="input-row">
+
+        <button onclick="copyToClipboard()">Copy as Text</button>
+
+        <button onclick="copyImageToClipboard()">Copy as Image</button>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+
+
+    <script>
+        function enlargeString() {
+            const inputString = document.getElementById('inputString').value.toUpperCase();
+            const replacementChar = document.getElementById('replacementChar').value || 'O';
+
+            const outputDiv = document.getElementById('output');
+            const asciiArt = {
+                'A': ['  O  ', ' O O ', 'OOOOO', 'O   O', 'O   O'],
+                'B': ['OOOO ', 'O   O', 'OOOO ', 'O   O', 'OOOO '],
+                'C': [' OOO ', 'O   O', 'O    ', 'O   O', ' OOO '],
+                'D': ['OOOO ', 'O   O', 'O   O', 'O   O', 'OOOO '],
+                'E': ['OOOOO', 'O    ', 'OOOO ', 'O    ', 'OOOOO'],
+                'F': ['OOOOO', 'O    ', 'OOOO ', 'O    ', 'O    '],
+                'G': [' OOO ', 'O    ', 'O  OO', 'O   O', ' OOO '],
+                'H': ['O   O', 'O   O', 'OOOOO', 'O   O', 'O   O'],
+                'I': [' OOO ', '  O  ', '  O  ', '  O  ', ' OOO '],
+                'J': ['  OOO', '   O ', '   O ', 'O  O ', ' OO  '],
+                'K': ['O   O', 'O  O ', 'OOO  ', 'O  O ', 'O   O'],
+                'L': ['O    ', 'O    ', 'O    ', 'O    ', 'OOOOO'],
+                'M': ['O   O', 'OO OO', 'O O O', 'O   O', 'O   O'],
+                'N': ['O   O', 'OO  O', 'O O O', 'O  OO', 'O   O'],
+                'O': [' OOO ', 'O   O', 'O   O', 'O   O', ' OOO '],
+                'P': ['OOOO ', 'O   O', 'OOOO ', 'O    ', 'O    '],
+                'Q': [' OOO ', 'O   O', 'O   O', 'O  OO', ' OOOO'],
+                'R': ['OOOO ', 'O   O', 'OOOO ', 'O  O ', 'O   O'],
+                'S': [' OOO ', 'O    ', ' OOO ', '    O', ' OOO '],
+                'T': ['OOOOO', '  O  ', '  O  ', '  O  ', '  O  '],
+                'U': ['O   O', 'O   O', 'O   O', 'O   O', ' OOO '],
+                'V': ['O   O', 'O   O', 'O   O', ' O O ', '  O  '],
+                'W': ['O   O', 'O   O', 'O O O', 'OO OO', 'O   O'],
+                'X': ['O   O', ' O O ', '  O  ', ' O O ', 'O   O'],
+                'Y': ['O   O', ' O O ', '  O  ', '  O  ', '  O  '],
+                'Z': ['OOOOO', '   O ', '  O  ', ' O   ', 'OOOOO'],
+                '.': ['     ', '     ', '     ', '     ', '  O  '],
+                ',': ['     ', '     ', '     ', '  O  ', ' O   '],
+                '!': ['  O  ', '  O  ', '  O  ', '     ', '  O  '],
+                '?': [' OOO ', 'O   O', '  OO ', '     ', '  O  '],
+                '0': [' OOO ', 'O   O', 'O   O', 'O   O', ' OOO '],
+                '1': ['  O  ', ' OO  ', '  O  ', '  O  ', ' OOO '],
+                '2': [' OOO ', 'O   O', '  OO ', ' O   ', 'OOOOO'],
+                '3': [' OOO ', '    O', '  OO ', '    O', ' OOO '],
+                '4': ['   O ', '  OO ', ' O O ', 'OOOOO', '   O '],
+                '5': ['OOOOO', 'O    ', 'OOOO ', '    O', ' OOO '],
+                '6': [' OOO ', 'O    ', 'OOOO ', 'O   O', ' OOO '],
+                '7': ['OOOOO', '   O ', '  O  ', ' O   ', 'O    '],
+                '8': [' OOO ', 'O   O', ' OOO ', 'O   O', ' OOO '],
+                '9': [' OOO ', 'O   O', ' OOO ', '    O', ' OOO ']
+            };
+
+            const numRows = 5; // Number of rows in each character's ASCII art
+            let enlargedString = Array(numRows).fill('');
+
+            for (let char of inputString) {
+                if (asciiArt[char]) {
+                    for (let i = 0; i < numRows; i++) {
+                        enlargedString[i] += asciiArt[char][i].replaceAll("O", replacementChar) + '   '; // Add 3 spaces between letters
+                    }
+                } else {
+                    for (let i = 0; i < numRows; i++) {
+                        enlargedString[i] += '     '; // Add space for unsupported characters
+                    }
+                }
+            }
+
+            outputDiv.textContent = enlargedString.join('\n');
+        }
+
+        // function copyToClipboard() {
+        //     const outputDiv = document.getElementById('output');
+        //     const textToCopy = outputDiv.textContent;
+
+        //     navigator.clipboard.writeText(textToCopy).then(() => {
+
+        //         const inputString = document.getElementById('inputString').value.toUpperCase();
+
+        //         alert('OOOSCII art for ' + inputString + ' copied to clipboard!');
+        //     }).catch(err => {
+        //         console.error('Failed to copy text: ', err);
+        //     });
+        // }
+
+        function copyToClipboard() {
+            const outputDiv = document.getElementById('output');
+            const textToCopy = outputDiv.textContent;
+
+            // Split the text into lines, add "// " to each line, and join them back
+            const commentedText = textToCopy.split('\n').map(line => '// ' + line).join('\n');
+
+            navigator.clipboard.writeText(commentedText).then(() => {
+                const inputString = document.getElementById('inputString').value.toUpperCase();
+                alert('OOOSCII art for ' + inputString + ' copied to clipboard as comments!');
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+
+        function copyImageToClipboard() {
+            const outputDiv = document.getElementById('output');
+
+            html2canvas(outputDiv).then(canvas => {
+                canvas.toBlob(blob => {
+                    const item = new ClipboardItem({ 'image/png': blob });
+                    navigator.clipboard.write([item]).then(() => {
+                        alert('Image copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy image: ', err);
+                    });
+                });
+            }).catch(err => {
+                console.error('Failed to capture image: ', err);
+            });
+        }
+
+
+        function animateInputString() {
+            const inputString = document.getElementById('inputString');
+            const text = "Type something..."; // Example text to animate
+            let index = 0;
+
+            const interval = setInterval(() => {
+                if (index < text.length) {
+                    inputString.value += text[index];
+                    enlargeString()
+                    index++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 100); // 200 milliseconds = 0.2 seconds
+        }
+
+        window.onload = animateInputString;
+
+
+    </script>
+</body>
+
+</html>
