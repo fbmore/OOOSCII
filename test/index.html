@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI News Scraper</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 20px;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .articles {
+      margin-top: 20px;
+    }
+
+    .site {
+      margin-bottom: 30px;
+    }
+
+    .article {
+      margin-bottom: 10px;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI News Scraper</h1>
+  <div id="articles" class="articles"></div>
+
+  <script>
+    // List of AI-focused websites
+    const websites = [
+      "https://www.theverge.com/artificial-intelligence",
+      "https://www.wired.com/category/ai/",
+      "https://venturebeat.com/ai/",
+      "https://techcrunch.com/tag/ai/",
+      "https://aibusiness.com/"
+    ];
+
+    // Function to fetch and parse articles from a given URL
+    async function extractArticles(url) {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const text = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, "text/html");
+
+        const articles = [];
+        if (url.includes("theverge.com")) {
+          doc.querySelectorAll("h2 a").forEach((item, index) => {
+            if (index < 5) {
+              const title = item.textContent.trim();
+              const link = item.href.startsWith("http") ? item.href : `https://www.theverge.com${item.getAttribute("href")}`;
+              articles.push({ title, link });
+            }
+          });
+        } else if (url.includes("wired.com")) {
+          doc.querySelectorAll("h2 a").forEach((item, index) => {
+            if (index < 5) {
+              const title = item.textContent.trim();
+              const link = item.href.startsWith("http") ? item.href : `https://www.wired.com${item.getAttribute("href")}`;
+              articles.push({ title, link });
+            }
+          });
+        } else if (url.includes("venturebeat.com")) {
+          doc.querySelectorAll("h2 a").forEach((item, index) => {
+            if (index < 5) {
+              const title = item.textContent.trim();
+              const link = item.href;
+              articles.push({ title, link });
+            }
+          });
+        } else if (url.includes("techcrunch.com")) {
+          doc.querySelectorAll("h2 a").forEach((item, index) => {
+            if (index < 5) {
+              const title = item.textContent.trim();
+              const link = item.href;
+              articles.push({ title, link });
+            }
+          });
+        } else if (url.includes("aibusiness.com")) {
+          doc.querySelectorAll("h2 a").forEach((item, index) => {
+            if (index < 5) {
+              const title = item.textContent.trim();
+              const link = item.href;
+              articles.push({ title, link });
+            }
+          });
+        }
+        return articles;
+      } catch (error) {
+        return { error: error.message };
+      }
+    }
+
+    // Function to render articles to the DOM
+    async function renderArticles() {
+      const articlesDiv = document.getElementById("articles");
+
+      for (const website of websites) {
+        const siteName = website.split("//")[1].split("/")[0];
+        const siteDiv = document.createElement("div");
+        siteDiv.className = "site";
+        const siteHeader = document.createElement("h2");
+        siteHeader.textContent = `Last 5 Articles from ${siteName}`;
+        siteDiv.appendChild(siteHeader);
+
+        const articles = await extractArticles(website);
+
+        if (articles.error) {
+          const errorDiv = document.createElement("div");
+          errorDiv.className = "error";
+          errorDiv.textContent = `Error fetching articles from ${siteName}: ${articles.error}`;
+          siteDiv.appendChild(errorDiv);
+        } else {
+          articles.forEach(article => {
+            const articleDiv = document.createElement("div");
+            articleDiv.className = "article";
+            const articleLink = document.createElement("a");
+            articleLink.href = article.link;
+            articleLink.textContent = article.title;
+            articleLink.target = "_blank";
+            articleDiv.appendChild(articleLink);
+            siteDiv.appendChild(articleDiv);
+          });
+        }
+
+        articlesDiv.appendChild(siteDiv);
+      }
+    }
+
+    // Initialize the script
+    renderArticles();
+  </script>
+</body>
+</html>
